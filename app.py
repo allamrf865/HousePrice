@@ -15,13 +15,22 @@ import matplotlib.font_manager as fm
 from sklearn.pipeline import make_pipeline
 
 # Load the custom font
-font_path = 'kc_house_data.csv'
+font_path = 'kc_house_data.csv'  # Remove if not using a custom font file
 font_prop = fm.FontProperties(fname=font_path)
 
 # Load the dataset
 @st.cache
 def load_data():
     data = pd.read_csv('kc_house_data.csv')  # Update with your correct dataset path
+    
+    # Convert date column to datetime (assuming your date column is called 'date')
+    if 'date' in data.columns:
+        data['date'] = pd.to_datetime(data['date'], format='%Y%m%dT%H%M%S')
+        # You can now extract additional features from the 'date' column (e.g., year, month, day)
+        data['year_sold'] = data['date'].dt.year
+        data['month_sold'] = data['date'].dt.month
+        data['day_sold'] = data['date'].dt.day
+
     return data
 
 # Display basic statistics and correlations
@@ -133,33 +142,12 @@ def main():
     # Load data
     data = load_data()
 
-    # Display dataset overview
-    st.subheader('Dataset Overview')
-    st.write(data.head())
-
     # Perform feature engineering
     data = feature_engineering(data)
 
-    # Display summary statistics
-    st.subheader('Summary Statistics')
-    desc, corr = analyze_data(data)
-    st.write(desc)
-
-    # Show correlation heatmap
-    st.subheader('Correlation Matrix')
-    plt.figure(figsize=(10, 6))
-    sns.heatmap(corr, annot=True, fmt='.2f', cmap='coolwarm', linewidths=0.5)
-    plt.title('Correlation Matrix', fontsize=16, fontproperties=font_prop)
-    st.pyplot(plt)
-
-    # Visualizations
-    st.subheader('Visualizations')
-    plot_price_distribution(data)
-    plot_price_vs_sqft(data)
-
-    # 3D Price Prediction Visualization
-    st.subheader('3D Price Prediction Visualization')
-    plot_3d_price_vs_features(data)
+    # Display dataset overview
+    st.subheader('Dataset Overview')
+    st.write(data.head())
 
     # Property Price Prediction
     st.subheader('Property Price Prediction')
