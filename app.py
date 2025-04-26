@@ -8,13 +8,13 @@ from sklearn.linear_model import LinearRegression, Ridge, Lasso
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, r2_score
-from sklearn.pipeline import make_pipeline
+import plotly.graph_objects as go
+import plotly.express as px
 from datetime import datetime
 import matplotlib.font_manager as fm
-import plotly.express as px
-import plotly.graph_objects as go
+from sklearn.pipeline import make_pipeline
 
-# Load custom font
+# Load the custom font
 font_path = '/mnt/data/file-ngwyeoEN29l1M3O1QpdxCwkj'
 font_prop = fm.FontProperties(fname=font_path)
 
@@ -88,6 +88,36 @@ def evaluate_model(model, X, y):
     r2 = cross_val_score(model, X, y, cv=kf, scoring='r2').mean()
     return mse, rmse, r2
 
+# 3D Visualization for Price vs Features
+def plot_3d_price_vs_features(data):
+    fig = go.Figure(data=[go.Scatter3d(
+        x=data['sqft_living'],
+        y=data['bedrooms'],
+        z=data['price'],
+        mode='markers',
+        marker=dict(
+            size=5,
+            color=data['price'],  # Color by price
+            colorscale='Viridis',
+            opacity=0.8
+        ),
+        text=data.apply(lambda row: f'Price: ${row["price"]:,.0f}<br>Sqft: {row["sqft_living"]}<br>Bedrooms: {row["bedrooms"]}', axis=1)
+    )])
+
+    fig.update_layout(
+        scene=dict(
+            xaxis_title='Living Area (Sqft)',
+            yaxis_title='Number of Bedrooms',
+            zaxis_title='Price',
+        ),
+        title="3D View: Price vs Living Area vs Bedrooms",
+        coloraxis_colorbar=dict(
+            title="Price"
+        )
+    )
+
+    st.plotly_chart(fig)
+
 # Loan Payment Calculator
 def calculate_monthly_payment(loan_amount, interest_rate, years):
     monthly_rate = interest_rate / 100 / 12
@@ -126,6 +156,10 @@ def main():
     st.subheader('Visualizations')
     plot_price_distribution(data)
     plot_price_vs_sqft(data)
+
+    # 3D Price Prediction Visualization
+    st.subheader('3D Price Prediction Visualization')
+    plot_3d_price_vs_features(data)
 
     # Property Price Prediction
     st.subheader('Property Price Prediction')
