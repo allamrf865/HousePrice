@@ -23,14 +23,17 @@ font_prop = fm.FontProperties(fname=font_path)
 def load_data():
     data = pd.read_csv('kc_house_data.csv')  # Update with your correct dataset path
     
-    # Convert date column to datetime (assuming your date column is called 'date')
+    # Convert 'date' column to datetime (assuming your date column is called 'date')
     if 'date' in data.columns:
         data['date'] = pd.to_datetime(data['date'], format='%Y%m%dT%H%M%S')
-        # You can now extract additional features from the 'date' column (e.g., year, month, day)
+        # Extract year, month, and day from the 'date' column
         data['year_sold'] = data['date'].dt.year
         data['month_sold'] = data['date'].dt.month
         data['day_sold'] = data['date'].dt.day
-
+        
+        # Drop 'date' column if not needed
+        data = data.drop(columns=['date'])
+    
     return data
 
 # Display basic statistics and correlations
