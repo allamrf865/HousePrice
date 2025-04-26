@@ -15,7 +15,7 @@ import matplotlib.font_manager as fm
 from sklearn.pipeline import make_pipeline
 
 # Load the custom font
-font_path = '/mnt/data/file-ngwyeoEN29l1M3O1QpdxCwkj'
+font_path = 'kc_house_data.csv'
 font_prop = fm.FontProperties(fname=font_path)
 
 # Load the dataset
