@@ -21,7 +21,7 @@ font_prop = fm.FontProperties(fname=font_path)
 # Load the dataset
 @st.cache
 def load_data():
-    data = pd.read_csv('/mnt/data/file-DM5RHVe8asgbMmGW5xPZWi')  # Update with your correct dataset path
+    data = pd.read_csv('kc_house_data.csv')  # Update with your correct dataset path
     return data
 
 # Display basic statistics and correlations
@@ -128,7 +128,7 @@ def calculate_monthly_payment(loan_amount, interest_rate, years):
 
 # Main function
 def main():
-    st.title('Advanced House Price Prediction Tool by Muhammad Allam Rafi')
+    st.title('House Price Prediction Tool by Muhammad Allam Rafi')
 
     # Load data
     data = load_data()
